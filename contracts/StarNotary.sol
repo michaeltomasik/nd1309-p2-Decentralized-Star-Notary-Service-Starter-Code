@@ -5,6 +5,10 @@ import "../node_modules/openzeppelin-solidity/contracts/token/ERC721/ERC721.sol"
 
 // StarNotary Contract declaration inheritance the ERC721 openzeppelin implementation
 contract StarNotary is ERC721 {
+    event Debug(
+        string name,
+        bool info
+    );
 
     // Star data
     struct Star {
@@ -14,7 +18,8 @@ contract StarNotary is ERC721 {
     // Implement Task 1 Add a name and symbol properties
     // name: Is a short name to your token
     // symbol: Is a short string like 'USD' -> 'American Dollar'
-    mapping(uint256 => uint256) public tokenNameToSymbol;
+    string public tokenName = "My Token";
+    string public symbol = "MT";
 
     // mapping the Star with the Owner Address
     mapping(uint256 => Star) public tokenIdToStarInfo;
@@ -71,10 +76,14 @@ contract StarNotary is ERC721 {
         //2. You don't have to check for the price of the token (star)
         //3. Get the owner of the two tokens (ownerOf(_tokenId1), ownerOf(_tokenId2)
         //4. Use _transferFrom function to exchange the tokens.
-        if(isToken1Sender || isToken2Sender) {
+        emit Debug('HERE', isToken1Sender);
+        // It is better to use require because it gives you better syntax error
+        require(isToken1Sender || isToken2Sender, "Must have Stars");
+
+        // if(isToken1Sender || isToken2Sender) {
             _transferFrom(token1Sender, token2Sender, _tokenId1); // We can't use _addTokenTo or_removeTokenFrom functions, now we have to use _transferFrom
             _transferFrom(token2Sender, token1Sender, _tokenId2);
-        }
+        // }
     }
 
     // Implement Task 1 Transfer Stars
